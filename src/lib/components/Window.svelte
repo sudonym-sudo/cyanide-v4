@@ -1,5 +1,5 @@
 <script>
-  let { children } = $props();
+  let { children, name } = $props();
 
   let x = $state(100);
   let y = $state(200);
@@ -16,15 +16,20 @@
 
 <div 
   class="window"
-  role="button"
-  tabindex="0"
   style:left="{x}px"
   style:top="{y}px"
-  onmousedown={(e) => {
+  >
+  {#if name}
+    <div 
+    class="window-title"
+    role="button"
+    tabindex="0"
+    onmousedown={(e) => {
     isDragging = true;
     grabX = e.clientX - x;
     grabY = e.clientY - y;
-  }}>
+  }}>{name}</div>
+  {/if}
   {@render children?.()}
 </div>
 
@@ -35,7 +40,14 @@
     background-color: white;
     border: 1px solid #333;
     position: absolute;
-    cursor: grab;
     user-select: none;
+  }
+  
+  .window-title {
+    background-color: #333;
+    color: white;
+    padding: 4px 8px;
+    font-size: 12px;
+    cursor: grab;
   }
 </style>
