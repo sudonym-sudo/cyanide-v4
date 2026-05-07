@@ -3,7 +3,14 @@
 
     let x = $state(100);
     let y = $state(200);
+    let bufferX = 0;
+    let bufferY = 0;
+    let width = $state(200);
+    let height = $state(150);
+    let bufferWidth = 0;
+    let bufferHeight = 0;
     let isDragging = $state(false);
+    let isMaximized = $state(false);
 
     let grabX = 0;
     let grabY = 0;
@@ -19,7 +26,11 @@
     onpointerup={() => (isDragging = false)}
 />
 
-<div class="window" style:left="{x}px" style:top="{y}px">
+<div class="window" 
+style:left="{x}px" 
+style:top="{y}px"
+style:width="{width}px"
+style:height="{height}px">
     {#if name}
         <div
             class="window-header"
@@ -50,7 +61,24 @@
                 class="window-maximize"
                 onclick={(e) => {
                     e.stopPropagation();
-                    onMaximize?.(e);
+                    isMaximized = !isMaximized;
+                    if (isMaximized) {
+                        bufferX = x;
+                        bufferY = y;
+                        bufferWidth = width;
+                        bufferHeight = height;
+                        x = 0;
+                        y = 0;
+                        width = window.innerWidth;
+                        height = window.innerHeight;
+                    } else {
+                        x = bufferX;
+                        y = bufferY;
+                        width = bufferWidth;
+                        height = bufferHeight;
+                    }
+
+                    
                 }}>＋</button
             >
         </div>
@@ -60,8 +88,7 @@
 
 <style>
     .window {
-        width: 100px;
-        height: 100px;
+  
         background-color: white;
         border: 1px solid #333;
         position: absolute;
