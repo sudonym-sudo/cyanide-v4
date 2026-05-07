@@ -1,5 +1,6 @@
 <script>
-    import Window from "./lib/components/Window.svelte";
+    import Window from "./lib/components/Window.svelte";    
+    // @ts-ignore
     let windows = $state([]);
     let context = $state("Nothing is happening...");
 </script>
@@ -57,7 +58,6 @@
                 : ""}
         onClose={() => (windows = windows.filter((w) => w.id !== win.id))}
         onMinimize={() => (windows = windows.filter((w) => w.id !== win.id))}
-        onMaximize={() => (windows = windows.filter((w) => w.id !== win.id))}
     >
         <h1>
             {win.type === "cyanide"

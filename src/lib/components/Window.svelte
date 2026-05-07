@@ -1,5 +1,5 @@
 <script>
-    let { children, name, onClose, onMinimize, onMaximize } = $props();
+    let { children, name, onClose, onMinimize } = $props();
 
     let x = $state(100);
     let y = $state(200);
@@ -14,6 +14,13 @@
 
     let grabX = 0;
     let grabY = 0;
+    let isResizing = $state(false);
+    let resizeBuffer = $state({
+        startX: 0,
+        startY: 0,
+        startWidth: 0,
+        startHeight: 0
+    });
 </script>
 
 <svelte:window
@@ -22,8 +29,15 @@
             x = e.clientX - grabX;
             y = e.clientY - grabY;
         }
+        if (isResizing) {
+            width = Math.max(100, resizeBuffer.startWidth + (e.clientX - resizeBuffer.startX));
+            height = Math.max(100, resizeBuffer.startHeight + (e.clientY - resizeBuffer.startY));
+        }
     }}
-    onpointerup={() => (isDragging = false)}
+    onpointerup={() => {
+        isDragging = false;
+        isResizing = false;
+    }}
 />
 
 <div class="window" 
@@ -84,6 +98,17 @@ style:height="{height}px">
         </div>
     {/if}
     {@render children?.()}
+    <div class="window-resize" onpointerdown={(e) => {
+        e.stopPropagation();
+        isResizing = true;
+        resizeBuffer = {
+            startX: e.clientX,
+            startY: e.clientY,
+            startWidth: width,
+            startHeight: height
+        };
+    }}>></div>
+
 </div>
 
 <style>
@@ -132,5 +157,20 @@ style:height="{height}px">
 
     .window-close:hover {
         background-color: #e81123 !important;
+    }
+
+    .window-resize {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 16px;
+        height: 16px;
+        cursor: se-resize;
+        background-color: #ccc;
+        user-select: none;
+    }
+
+    .window-resize:hover {
+        background-color: #999;
     }
 </style>
