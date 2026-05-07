@@ -1,6 +1,5 @@
 <script>
     import Window from "./lib/components/Window.svelte";
-    // @ts-ignore
     let windows = $state([]);
     let context = $state("Nothing is happening...");
 </script>
@@ -9,8 +8,8 @@
     <button
         class="apps-button"
         id="cyanide"
-        onmouseenter={() => (context = "Launch cyanide")}
-        onmouseleave={() => (context = "Nothing is happening...")}
+        onpointerdown={() => (context = "Launch cyanide")}
+        onpointerup={() => (context = "Nothing is happening...")}
         onclick={() =>
             windows.push({
                 id: crypto.randomUUID(),
@@ -22,8 +21,8 @@
     <button
         class="apps-button"
         id="sulfur"
-        onmouseenter={() => (context = "Launch sulfur")}
-        onmouseleave={() => (context = "Nothing is happening...")}
+        onpointerdown={() => (context = "Launch sulfur")}
+        onpointerup={() => (context = "Nothing is happening...")}
         onclick={() =>
             windows.push({
                 id: crypto.randomUUID(),
@@ -35,8 +34,8 @@
     <button
         class="apps-button"
         id="fluoride"
-        onmouseenter={() => (context = "Launch fluoride")}
-        onmouseleave={() => (context = "Nothing is happening...")}
+        onpointerdown={() => (context = "Launch fluoride")}
+        onpointerup={() => (context = "Nothing is happening...")}
         onclick={() =>
             windows.push({
                 id: crypto.randomUUID(),
@@ -47,20 +46,29 @@
     </button>
 </section>
 
-{#each windows as window}
-    {#if window.type === "cyanide"}
-        <Window name="Cyanide">
-            <h1>Cyanide</h1>
-        </Window>
-    {:else if window.type === "sulfur"}
-        <Window name="Sulfur">
-            <h1>Sulfur</h1>
-        </Window>
-    {:else if window.type === "fluoride"}
-        <Window name="Fluoride">
-            <h1>Fluoride</h1>
-        </Window>
-    {/if}
+{#each windows as win (win.id)}
+    <Window
+        name={win.type === "cyanide"
+            ? "Cyanide"
+            : win.type === "sulfur"
+              ? "Sulfur"
+              : win.type === "fluoride"
+                ? "Fluoride"
+                : ""}
+        onClose={() => (windows = windows.filter((w) => w.id !== win.id))}
+        onMinimize={() => (windows = windows.filter((w) => w.id !== win.id))}
+        onMaximize={() => (windows = windows.filter((w) => w.id !== win.id))}
+    >
+        <h1>
+            {win.type === "cyanide"
+                ? "Cyanide"
+                : win.type === "sulfur"
+                  ? "Sulfur"
+                  : win.type === "fluoride"
+                    ? "Fluoride"
+                    : ""}
+        </h1>
+    </Window>
 {/each}
 
 <section class="context">

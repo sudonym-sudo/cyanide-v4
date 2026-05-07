@@ -1,7 +1,6 @@
 <script>
     let { children, name, onClose, onMinimize, onMaximize } = $props();
 
-
     let x = $state(100);
     let y = $state(200);
     let isDragging = $state(false);
@@ -33,9 +32,27 @@
             }}
         >
             <span class="window-title">{name}</span>
-            <button class="window-close" onpointerdown={(e) => { onClose?.(e); }}>×</button>
-            <button class="window-minimize" onpointerdown={(e) => { onMinimize?.(e); }}>−</button>
-            <button class="window-maximize" onpointerdown={(e) => { onMaximize?.(e); }}>＋</button>
+            <button
+                class="window-close"
+                onclick={(e) => {
+                    e.stopPropagation();
+                    onClose?.(e);
+                }}>×</button
+            >
+            <button
+                class="window-minimize"
+                onclick={(e) => {
+                    e.stopPropagation();
+                    onMinimize?.(e);
+                }}>−</button
+            >
+            <button
+                class="window-maximize"
+                onclick={(e) => {
+                    e.stopPropagation();
+                    onMaximize?.(e);
+                }}>＋</button
+            >
         </div>
     {/if}
     {@render children?.()}
@@ -57,9 +74,36 @@
         padding: 4px 8px;
         font-size: 12px;
         cursor: grab;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
 
     .window-title {
-        display: block;
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .window-header button {
+        background: none;
+        border: none;
+        color: white;
+        padding: 0 4px;
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .window-header button:hover {
+        background-color: #555;
+    }
+
+    .window-close:hover {
+        background-color: #e81123 !important;
     }
 </style>
