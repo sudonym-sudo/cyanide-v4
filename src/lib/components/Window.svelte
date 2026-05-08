@@ -3,17 +3,19 @@
 
     let x = $state(100);
     let y = $state(200);
-    let bufferX = 0;
-    let bufferY = 0;
     let width = $state(200);
     let height = $state(150);
-    let bufferWidth = 0;
-    let bufferHeight = 0;
-    let isDragging = $state(false);
     let isMaximized = $state(false);
+    let maximizeBuffer = $state({
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0
+    });
 
     let grabX = 0;
     let grabY = 0;
+    let isDragging = $state(false);
     let isResizing = $state(false);
     let resizeBuffer = $state({
         startX: 0,
@@ -77,19 +79,21 @@ style:height="{height}px">
                     e.stopPropagation();
                     isMaximized = !isMaximized;
                     if (isMaximized) {
-                        bufferX = x;
-                        bufferY = y;
-                        bufferWidth = width;
-                        bufferHeight = height;
+                        maximizeBuffer = {
+                            x: x,
+                            y: y,
+                            width: width,
+                            height: height
+                        };
                         x = 0;
                         y = 0;
                         width = window.innerWidth;
                         height = window.innerHeight;
                     } else {
-                        x = bufferX;
-                        y = bufferY;
-                        width = bufferWidth;
-                        height = bufferHeight;
+                        x = maximizeBuffer.x;
+                        y = maximizeBuffer.y;
+                        width = maximizeBuffer.width;
+                        height = maximizeBuffer.height;
                     }
 
                     
@@ -98,7 +102,7 @@ style:height="{height}px">
         </div>
     {/if}
     {@render children?.()}
-    <div class="window-resize" onpointerdown={(e) => {
+    <div class="window-resize" role="button" tabindex="0" onpointerdown={(e) => {
         e.stopPropagation();
         isResizing = true;
         resizeBuffer = {

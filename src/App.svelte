@@ -1,7 +1,7 @@
 <script>
     import Window from "./lib/components/Window.svelte";    
     // @ts-ignore
-    let windows = $state([]);
+    let swindows = $state([]);
     let context = $state("Nothing is happening...");
 </script>
 
